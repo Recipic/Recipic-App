@@ -2,10 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
 export default function NetworkErrorScreen() {
-
   return (
     <View style={styles.errorContainer}>
-      <Image style={styles.image} source={require('../assets/icons/wifiSlash.png')} />
+      <Image
+        style={styles.image}
+        source={require('../assets/icons/wifiSlash.png')}
+      />
       <Text style={styles.errorText}>인터넷에 연결되어 있지 않아요</Text>
       <Text style={styles.errorSubText}>네트워크 환경을 확인해주세요</Text>
     </View>
@@ -32,5 +34,5 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-  }
+  },
 });
