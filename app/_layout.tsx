@@ -9,8 +9,15 @@ import {
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { useColorScheme, StyleSheet, StatusBar, Platform } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  useColorScheme,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  ToastAndroid,
+  BackHandler,
+} from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export { ErrorBoundary } from 'expo-router';
@@ -27,6 +34,42 @@ export default function RootLayout(): JSX.Element | null {
     ...FontAwesome.font,
   });
   const isConnected = useNetwork();
+  const [exitApp, setExitApp] = useState<boolean>(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const backAction = (): boolean => {
+      if (!exitApp) {
+        setExitApp(true);
+        ToastAndroid.show(
+          '뒤로가기 버튼을 한번 더 누르시면 종료되요.',
+          ToastAndroid.SHORT,
+        );
+        timerRef.current = setTimeout(() => {
+          setExitApp(false);
+        }, 2000); // 2초 내에 다시 누르지 않으면 초기화
+        return true;
+      } else {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+        BackHandler.exitApp(); // 앱 종료
+        return true;
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => {
+      backHandler.remove();
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [exitApp]);
 
   useEffect(() => {
     if (error) throw error;
