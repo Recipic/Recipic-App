@@ -14,6 +14,7 @@ export default function Home() {
 
   return (
     <WebView
+      textZoom={100}
       javaScriptEnabled={true}
       domStorageEnabled={true}
       source={{ uri: WEB_URL }}
