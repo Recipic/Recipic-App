@@ -40,6 +40,9 @@
       "eas": {
         "projectId": "b1d6c82a-32f8-4100-a19e-192631295a8f"
       }
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     }
   }
 }
